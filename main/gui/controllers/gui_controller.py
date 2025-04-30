@@ -1,3 +1,7 @@
+"""
+GUI LAYOUT AND WIDGET
+"""
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -19,11 +23,8 @@ SUBFRAME LAYOUTS
 # Sidebar menu
 menu_frame = ttk.Frame(content_frame)
 
-# Output of DB operations
-output_frame = ttk.Frame(content_frame)
-
-# Input for the DB operations
-input_frame = ttk.Frame(content_frame)
+# Input and Output of DB operations
+io_frame = ttk.Frame(content_frame)
 
 """
 MENU SUBFRAME WIDGETS
@@ -49,35 +50,36 @@ OUTPUT SUBFRAME WIDGETS
 """
 # Text output
 # Used to store the generated reports
-text_output = tk.Text(output_frame, font=('Courier New', 14), bg='#FFE4C4', fg='#556B2F')
-text_output.insert(tk.END, 'OUTPUTED TEXT WILL GO HERE!!')
+text_output = tk.Text(io_frame, font=('Courier New', 14), bg='#FFE4C4', fg='#556B2F')
+text_output.insert(tk.END, 'OUTPUT TEXT WILL GO HERE!!')
 text_output.config(state='disabled')
-text_output.pack(side='left', expand=True, fill='both')
+text_output.pack(side='top', expand=True, fill='both')
 
 """
 INPUT SUBFRAME WIDGETS
 """
 # Idle Widgets
 # Initial subframe of widgets to be displayed when opening the app
-def init_idle_widget():
-    pass
+input_idle_frame = ttk.Frame(io_frame)
+input_idle_frame.pack(side='top', expand=True, fill='x', ipady=30)
+# Label widget
+label_input_idle = tk.Label(input_idle_frame, text='CLICK ON THE LEFT BUTTONS TO CHOOSE AN ACTION!', font=('Courier New', 14), bg='#DEB887', fg='#556B2F', width=120)
+label_input_idle.pack(side='top', expand=True, fill='both')
 
 # Generating Report Widgets
-def init_generate_widget():
-    pass
+
+
 # Adding Representative Widgets
-def init_add_rep_widget():
-    pass
+
 
 # Updating Customer Credit Limit Widgets
-def init_update_credit_widget():
-    pass
+
 
 """
 PACKING SUBFRAMES TO THE CONTENT FRAME
 """
 menu_frame.pack(side='left', expand=True, fill='both')
-output_frame.pack(side='left', expand=True, fill='both')
+io_frame.pack(side='left', expand=True, fill='both')
 
 """
 PACKING CONTENT FRAME TO THE ROOT WINDOW
