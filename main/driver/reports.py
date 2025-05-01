@@ -5,7 +5,7 @@ def getCustomerReport(customerName):
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="35yeZey53+01",
+            password="password",
             database="CFG"
         )
         cursor = conn.cursor()
