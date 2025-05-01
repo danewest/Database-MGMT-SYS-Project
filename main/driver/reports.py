@@ -2,6 +2,7 @@ import mysql.connector
 
 def getCustomerReport(customerName):
     try:
+        # Connect to local DB
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -10,6 +11,7 @@ def getCustomerReport(customerName):
         )
         cursor = conn.cursor()
 
+        # SQL script to get the information needed and generate the report
         query = """
         SELECT c.CustomerName, SUM(o1.QuotedPrice * o1.NumOrdered) AS TotalQuotedPrice
         FROM Customer c
@@ -18,6 +20,7 @@ def getCustomerReport(customerName):
         WHERE c.CustomerName = %s
         GROUP BY c.CustomerName;
         """
+        # Execute the query from above
         cursor.execute(query, (customerName,))
         res = cursor.fetchone()
 
