@@ -4,6 +4,7 @@ from importlib.metadata import entry_points
 from tkinter import ttk, messagebox
 import main.database.connection.connection as connector
 from main.database.scripts.update_customer import update_customer_credit
+from main.database.scripts.add_representative import add_representative
 
 class AppState:
     """Manages the application's state."""
@@ -153,7 +154,7 @@ class IOFrame(ttk.Frame):
         # Button for submitting the changes to the database
         self.button_add_submit = tk.Button(frame, text='SUBMIT', font=('Courier New', 14), bg='#DEB887', fg='#556B2F',
                                   activebackground='#556B2F', activeforeground='#DEB887',
-                                  command=self._handle_report_submit)
+                                  command=self._handle_add_submit)
         # Packing the add_rep widgets
         label_fname.pack(side='top', expand=True, fill='both')
         self.entry_fname.pack(side='top', expand=True, fill='both')
@@ -176,8 +177,33 @@ class IOFrame(ttk.Frame):
         return frame
 
     def _handle_add_submit(self):
-        #TODO: Add functionality for submitting and adding a new user to the database
-        pass
+        try:
+            # collect input values
+            first_name = self.entry_fname.get()
+            last_name = self.entry_lname.get()
+            street = self.entry_street.get()
+            city = self.entry_city.get()
+            state = self.entry_state.get()
+            postal_code = self.entry_postalcode.get()
+            commission = self.entry_commission.get()
+            rate = self.entry_rate.get()
+
+            # try to convert numeric fields
+            postal_code = int(postal_code) if postal_code else None
+            commission = float(commission) if commission else None
+            rate = float(rate) if rate else None
+
+            # call add_representative
+            result = add_representative(connector.conn, first_name, last_name, street, city, state, postal_code, commission, rate)
+
+            # display result in popup
+            if result == "Representative Added":
+                messagebox.showinfo("Success", result)
+            else:
+                messagebox.showerror("Error", result)
+
+        except ValueError as e:
+            messagebox.showerror("Error", f"Invalid numeric input: {e}")
 
     def _create_update_customer_input_frame(self):
         frame = tk.Frame(self)
