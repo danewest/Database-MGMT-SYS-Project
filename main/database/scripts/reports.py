@@ -29,12 +29,15 @@ def generate_customer_report(customerName):
         else:
             report = {"CustomerName": customerName, "TotalQuotedPrice": 0.0}
 
+        # Returns a string of the report result to be used in the driver GUI
         return report
 
+    # For MySQL errors
     except mysql.connector.Error as e:
         print("Database Error:", e)
         return None
 
+    # Closes the connection when finished
     finally:
         if conn.is_connected():
             cursor.close()
