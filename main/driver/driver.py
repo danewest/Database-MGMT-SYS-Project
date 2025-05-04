@@ -87,14 +87,14 @@ class IOFrame(ttk.Frame):
         frame = ttk.Frame(self)
         # Report labels
         label_reporttype = tk.Label(frame, text='REPORT TYPE', font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
-        label_fname = tk.Label(frame, text='FIRST NAME', font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
-        label_lname = tk.Label(frame, text='LAST NAME', font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
+        label_fname = tk.Label(frame, text='CUSTOMER NAME', font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
+        #label_lname = tk.Label(frame, text='LAST NAME', font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
         # Report input widgets
         self.listbox_reporttype = tk.Listbox(frame, font=('Courier New', 14), bg='#DEB887', fg='#556B2F', selectmode='single')
         self.listbox_reporttype.insert(0, 'Representative')
         self.listbox_reporttype.insert(1, 'Customer')
         self.report_entry_fname = tk.Entry(frame, width=30, font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
-        self.report_entry_lname = tk.Entry(frame, width=30, font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
+        #self.report_entry_lname = tk.Entry(frame, width=30, font=('Courier New', 14), bg='#DEB887', fg='#556B2F')
         self.button_report_submit = tk.Button(frame, text='SUBMIT', font=('Courier New', 14), bg='#DEB887', fg='#556B2F',
                                     activebackground='#556B2F', activeforeground='#DEB887',
                                     command=self._handle_report_submit)
@@ -106,8 +106,8 @@ class IOFrame(ttk.Frame):
         label_fname.pack(side='top', expand=True,fill='both')
         self.report_entry_fname.pack(side='top', expand=True,fill='both')
         # Last name
-        label_lname.pack(side='top', expand=True,fill='both')
-        self.report_entry_lname.pack(side='top', expand=True,fill='both')
+        #label_lname.pack(side='top', expand=True,fill='both')
+        #self.report_entry_lname.pack(side='top', expand=True,fill='both')
         # Submit buttons
         self.button_report_submit.pack(side='top', expand=True, fill='both')
 
@@ -122,13 +122,44 @@ class IOFrame(ttk.Frame):
             selected_report = self.listbox_reporttype.get(selected_indices[0])
             if selected_report == 'Representative':
                 self.report_entry_fname.config(state='disabled', disabledbackground='#DEB887')
-                self.report_entry_lname.config(state='disabled', disabledbackground='#DEB887')
+                #self.report_entry_lname.config(state='disabled', disabledbackground='#DEB887')
             else:
                 self.report_entry_fname.config(state='normal', bg='#DEB887')
-                self.report_entry_lname.config(state='normal', bg='#DEB887')
+                #self.report_entry_lname.config(state='normal', bg='#DEB887')
 
     def _handle_report_submit(self):
-        #TODO: handle submitting a query to the database
+        # Clear output area
+        self.text_output.config(state='normal')
+        self.text_output.delete('1.0', tk.END)
+
+        selected_indices = self.listbox_reporttype.curselection()
+        if not selected_indices:
+            self.text_output.insert(tk.END, "Please select a report type.\n")
+            self.text_output.config(state='disabled')
+            return
+
+        report_type = self.listbox_reporttype.get(selected_indices[0])
+
+        if report_type == 'Representative':
+            from main.database.scripts.reports import generate_representative_report
+            try:
+                report = generate_representative_report()
+                self.text_output.insert(tk.END, report)
+            except Exception as e:
+                self.text_output.insert(tk.END, f"Error generating representative report:\n{e}")
+        elif report_type == 'Customer':
+            from main.database.scripts.reports import generate_customer_report
+            name = self.report_entry_fname.get().strip()
+            if not name:
+                self.text_output.insert(tk.END, "Please enter a customer name.\n")
+            else:
+                try:
+                    report = generate_customer_report(name)
+                    self.text_output.insert(tk.END, report)
+                except Exception as e:
+                    self.text_output.insert(tk.END, f"Error generating customer report:\n{e}")
+
+        self.text_output.config(state='disabled')
         pass
 
     def _create_add_rep_input_frame(self):
@@ -253,6 +284,14 @@ class IOFrame(ttk.Frame):
             self.current_input_frame.pack_forget()
         target_frame.pack(side='top', expand=True, fill='both')
         self.current_input_frame = target_frame
+
+    def set_output_text(self, message):
+        """Sets the content of the output text area."""
+        self.text_output.config(state='normal')  # Enable editing
+        self.text_output.delete('1.0', tk.END)  # Clear existing content
+        self.text_output.insert(tk.END, message)  # Insert new message
+        self.text_output.config(state='disabled')  # Disable editing again
+
 
 class MenuFrame(ttk.Frame):
     """Manages the sidebar menu buttons."""
