@@ -15,6 +15,7 @@ class AppState:
         'IDLE',       # No current operations
     }
 
+    # Constructor for the appstate object
     def __init__(self, initial_ui_state='IDLE'):
         if initial_ui_state not in self.ALLOWED_UI_STATES:
             raise ValueError(f"Invalid initial state: {initial_ui_state}")
@@ -39,6 +40,7 @@ class DatabaseState:
         'DISCONNECTED'      # Currently disconnected from the database
     }
 
+    # Constructor for the state of the database
     def __init__(self, initial_db_state='DISCONNECTED'):
         if initial_db_state not in self.ALLOWED_DB_STATES:
             raise ValueError(f"Invalid initial state: {initial_db_state}")
@@ -56,7 +58,12 @@ class DatabaseState:
         print(f"Application state changed to: {self._current_state}") # For debugging
 
 class IOFrame(ttk.Frame):
-    """Manages the input/output area of the application."""
+    """
+    Manages the input/output area of the application.
+    Outputs the reports in the center of the screen.
+    Takes input dependent on the current app state on the right side of the screen.
+    """
+    # Constructor for the input/output frame
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
         self.text_output = self._create_output_area()
@@ -67,6 +74,7 @@ class IOFrame(ttk.Frame):
         self.current_input_frame = self.input_idle_frame # Tracks the currently displayed input frame
         self.show_frame(self.current_input_frame)
 
+    # Initializes the frame for the program output
     def _create_output_area(self):
         text_output = tk.Text(self, font=('Courier New', 14), width=100, bg='#FFE4C4', fg='#556B2F')
         text_output.insert(tk.END, 'OUTPUT TEXT WILL GO HERE!!')
@@ -74,6 +82,7 @@ class IOFrame(ttk.Frame):
         text_output.pack(side='left', expand=True, fill='both')
         return text_output
 
+    # Input frame for when the appstate is set to IDLE
     def _create_idle_input_frame(self):
         frame = ttk.Frame(self)
         label = tk.Label(frame,
@@ -83,6 +92,8 @@ class IOFrame(ttk.Frame):
         frame.pack(side='top', expand=True, fill='y', ipady=30)
         return frame
 
+    # Input frame for when the appstate is set to GENERATE
+    # Takes the type of report as input and generates a report for either a specific customer or all reps
     def _create_generate_input_frame(self):
         frame = ttk.Frame(self)
         # Report labels
@@ -115,6 +126,8 @@ class IOFrame(ttk.Frame):
         self.listbox_reporttype.bind('<<ListboxSelect>>', self._handle_report_type_selection)
         return frame
 
+    # Action event listener for selecting a report type
+    # Used in the GENERATE appstate
     def _handle_report_type_selection(self, event):
         """Handles the selection change in the report type listbox."""
         selected_indices = self.listbox_reporttype.curselection()
@@ -127,6 +140,8 @@ class IOFrame(ttk.Frame):
                 self.report_entry_fname.config(state='normal', bg='#DEB887')
                 #self.report_entry_lname.config(state='normal', bg='#DEB887')
 
+    # Action event listener for the submit button
+    # Used in the GENERATE appstate
     def _handle_report_submit(self):
         # Clear output area
         self.text_output.config(state='normal')
@@ -160,8 +175,9 @@ class IOFrame(ttk.Frame):
                     self.text_output.insert(tk.END, f"Error generating customer report:\n{e}")
 
         self.text_output.config(state='disabled')
-        pass
 
+    # Input frame for when the appstate is set to ADD
+    # Takes input to create a new Rep in the database
     def _create_add_rep_input_frame(self):
         frame = tk.Frame(self)
         # Representative input labels
@@ -207,6 +223,8 @@ class IOFrame(ttk.Frame):
 
         return frame
 
+    # Action event listener for the submit button
+    # Used when the appstate is set to ADD
     def _handle_add_submit(self):
         try:
             # collect input values
@@ -236,6 +254,8 @@ class IOFrame(ttk.Frame):
         except ValueError as e:
             messagebox.showerror("Error", f"Invalid numeric input: {e}")
 
+    # Input frame for when the appstate is UPDATE
+    # Takes input to update a customer's credit limit in the database
     def _create_update_customer_input_frame(self):
         frame = tk.Frame(self)
         # Labels
@@ -257,6 +277,8 @@ class IOFrame(ttk.Frame):
 
         return frame
 
+    # Action event listener for the submit button
+    # Used when the appstate is set to UPDATE
     def _handle_update_submit(self):
         input_name = None
         input_limit = None
@@ -278,6 +300,7 @@ class IOFrame(ttk.Frame):
                 tk.messagebox.showerror('Error', 'Either a customer with that name doesnt exist or you entered an invalid credit limit.')
                 print(e)
 
+    # Changes the input frame dependent on the current appstate
     def show_frame(self, target_frame):
         """Brings the specified input frame to the front."""
         if self.current_input_frame:
@@ -285,6 +308,7 @@ class IOFrame(ttk.Frame):
         target_frame.pack(side='top', expand=True, fill='both')
         self.current_input_frame = target_frame
 
+    # Changes the text displayed in the output frame
     def set_output_text(self, message):
         """Sets the content of the output text area."""
         self.text_output.config(state='normal')  # Enable editing
@@ -295,6 +319,7 @@ class IOFrame(ttk.Frame):
 
 class MenuFrame(ttk.Frame):
     """Manages the sidebar menu buttons."""
+    # Constuctor for the menu frame on the left side of the app
     def __init__(self, parent, io_frame, app_state, db_state, **kwargs):
         super().__init__(parent, **kwargs)
         self.io_frame = io_frame
@@ -302,6 +327,7 @@ class MenuFrame(ttk.Frame):
         self.db_state = db_state
         self._create_buttons()
 
+    # Creates the menu buttons and sets their events
     def _create_buttons(self):
         button_config = [
             {'text': 'CONNECT', 'command': self._handle_connect},
@@ -316,6 +342,9 @@ class MenuFrame(ttk.Frame):
                                activeforeground='#DEB887', command=config['command'])
             button.pack(side='top', expand=True, fill='both')
 
+    # Action event handler for the CONNECT menu button
+    # Attempts to connect to the database
+    # Shows a message that states whether the connection was successful or unsuccessful
     def _handle_connect(self):
         if self.db_state.current != 'CONNECTING' or self.app_state.current != 'CONNECTED':
             self.db_state.current = 'CONNECTING'
@@ -328,6 +357,8 @@ class MenuFrame(ttk.Frame):
         else:
             print("Already connecting...")
 
+    # Action event handler for the GENERATE menu button
+    # Changes the appstate to GENERATE
     def _handle_generate(self):
         if self.app_state.current != 'GENERATE':
             self.app_state.current = 'GENERATE'
@@ -335,6 +366,8 @@ class MenuFrame(ttk.Frame):
         else:
             print("Already in GENERATE state.")
 
+    # Action event handler for the ADD menu button
+    # Changes the appstate to ADD
     def _handle_add_rep(self):
         if self.app_state.current != 'ADD':
             self.app_state.current = 'ADD'
@@ -342,6 +375,8 @@ class MenuFrame(ttk.Frame):
         else:
             print("Already in ADD state.")
 
+    # Action event handler for the UPDATE menu button
+    # Changes the appstate to UPDATE
     def _handle_update_customer(self):
         if self.app_state.current != 'UPDATE':
             self.app_state.current = 'UPDATE'
@@ -349,9 +384,12 @@ class MenuFrame(ttk.Frame):
         else:
             print("Already in UPDATE state.")
 
+    # Action event handler for the EXIT menu button
+    # Closes the program
     def _handle_exit(self):
         root.destroy()
 
+    # Creates a messagebox with variable types
     def _create_messagebox(self, type, title, message):
         if (type == 'error'):
             messagebox.showerror(title, message)
@@ -364,6 +402,7 @@ class MenuFrame(ttk.Frame):
 
 class ContentFrame(tk.Frame):
     """Manages the main content area, holding the menu and IO frames."""
+    # Constuctor for the ContentFrame object
     def __init__(self, parent, app_state, db_state, **kwargs):
         super().__init__(parent, **kwargs)
         self.app_state = app_state
@@ -372,12 +411,14 @@ class ContentFrame(tk.Frame):
         self.menu_frame = MenuFrame(self, self.io_frame, self.app_state, self.db_state)
         self._layout()
 
+    # Defines the layout of the app
     def _layout(self):
         self.menu_frame.pack(side='left', expand=True, fill='both')
         self.io_frame.pack(side='left', expand=True, fill='both')
 
 class DatabaseApp(tk.Tk):
     """The main application window."""
+    # Constructor for the application object
     def __init__(self):
         super().__init__()
         self.title('CFG DATABASE APPLICATION')

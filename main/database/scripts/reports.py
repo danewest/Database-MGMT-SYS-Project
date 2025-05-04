@@ -6,8 +6,8 @@ def generate_customer_report(customerName):
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="InsertYourPasswordHere",
-            database="CFG"
+            password="password",
+            database="cfg"
         )
         cursor = conn.cursor()
 
