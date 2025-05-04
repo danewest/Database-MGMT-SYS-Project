@@ -17,7 +17,7 @@ def connect():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="password",
+            password="InsertYourPasswordHere",
             database="cfg")
 
         print('Connected to MySQL Database')
