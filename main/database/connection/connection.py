@@ -9,15 +9,18 @@ from main.database.scripts.update_customer import update_customer_credit
 # Tries to connect to the DB
 # Success: Print a message saying the connection was successful to the terminal
 # Fail: Print error message to the terminal
+
+# Global connection object
 conn = None
 
+# Function to connect to the database
 def connect():
     try:
         global conn
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="InsertYourPasswordHere",
+            password="password",
             database="cfg")
 
         print('Connected to MySQL Database')
@@ -31,6 +34,7 @@ def connect():
             print('Failed to connect to MySQL database')
         return False
 
+# Closes the connection
 def close_connection():
-    cursor.close()
+    global conn
     conn.close()
