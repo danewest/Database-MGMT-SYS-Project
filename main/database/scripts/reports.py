@@ -1,12 +1,12 @@
 import mysql.connector
 
-def getCustomerReport(customerName):
+def generate_customer_report(customerName):
     try:
         # Connect to local DB
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="password",
+            password="InsertYourPasswordHere",
             database="CFG"
         )
         cursor = conn.cursor()
@@ -24,10 +24,12 @@ def getCustomerReport(customerName):
         cursor.execute(query, (customerName,))
         res = cursor.fetchone()
 
-        #if res:
-        #    return {"CustomerName": res[0], "TotalQuotedPrice": float(res[1])}
-        #else:
-        #    return {"CustomerName": customerName, "TotalQuotedPrice": 0.0}
+        if res:
+            report = {"CustomerName": res[0], "TotalQuotedPrice": float(res[1])}
+        else:
+            report = {"CustomerName": customerName, "TotalQuotedPrice": 0.0}
+
+        return report
 
     except mysql.connector.Error as e:
         print("Database Error:", e)
