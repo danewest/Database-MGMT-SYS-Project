@@ -35,6 +35,8 @@ change a database.
        ii. Run the driver.py file in an IDE or through the command line.
       iii. If any issues persist with running the program, edit the database name and passwords found in connection.py
            and reports.py.
+       iv. ALWAYS when running the program, hit the CONNECT menu button on the left side of the app before any other
+           actions other than EXIT.
 
 3. USAGE
     This project was to test our understanding or database management and application design conecpts.
