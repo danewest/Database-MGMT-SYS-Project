@@ -42,3 +42,48 @@ def generate_customer_report(customerName):
         if conn.is_connected():
             cursor.close()
             conn.close()
+
+def generate_representative_report(connection):
+    try:
+        conn = connection
+        cursor = conn.cursor()
+
+        # SQL query for fetching the num of customers and avg balance for a representative
+        representative_report_query = """
+            SELECT r.FirstName, r.LastName, COUNT(c.CustomerNum) AS NumCustomers, ROUND(AVG(c.Balance), 2) AS AvgBalance
+            FROM Rep r
+            LEFT JOIN Customer c ON r.RepNum = c.RepNum
+            GROUP BY r.RepNum, r.FirstName, r.LastName
+            ORDER BY r.LastName, r.FirstName;
+        """
+        cursor.execute(representative_report_query)
+        res = cursor.fetchall()
+
+        report = []
+        # loop through all the rows
+        for row in res:
+            if res:
+                report.append({
+                    "FirstName": row[0],
+                    "LastName": row[1],
+                    "NumCustomers": row[2],
+                    "AvgBalance": float(row[3]) if row[3] is not None else 0.0
+                })
+            else:
+                report.append({
+                    "FirstName": '',
+                    "LastName": '',
+                    "NumCustomers": 0,
+                    "AvgBalance": 0.0
+                })
+
+        return report
+
+    except mysql.connector.Error as e:
+        print("Database Error", e)
+        return None
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()

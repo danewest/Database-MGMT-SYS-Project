@@ -158,8 +158,10 @@ class IOFrame(ttk.Frame):
         if report_type == 'Representative':
             from main.database.scripts.reports import generate_representative_report
             try:
-                report = generate_representative_report()
-                self.text_output.insert(tk.END, report)
+                report = generate_representative_report(connector.conn)
+                for row in report:
+                    self.text_output.insert(tk.END, row)
+                    self.text_output.insert(tk.END, '\n')
             except Exception as e:
                 self.text_output.insert(tk.END, f"Error generating representative report:\n{e}")
         elif report_type == 'Customer':
