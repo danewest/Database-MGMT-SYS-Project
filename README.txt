@@ -1,6 +1,8 @@
 DBMS-MGMT-SYS-PROJECT
 
-CONTRIBUTORS:
+GITHUB REPOSITORY: https://github.com/danewest/Database-MGMT-SYS-Project.git
+
+CONTRIBUTORS AND CONTACTS:
     Dowell, Isaac (isaac.dowell153@topper.wku.edu)
     Kedenburg, Emily (emily.kedenburg358@topper.wku.edu)
     Lozano, Alex (alexander.lozano884@topper.wku.edu)
@@ -16,7 +18,7 @@ TABLE OF CONTENTS:
     3. Usage
     4. Contributions
 
-1. ABOUT THIS PROJECT
+1. ABOUT
     This project was created as a final project for our (the contributors') Database Management Systems I class at
 Western Kentucky University. The assignment was to create an application with a user interface that could access and
 change a database.
@@ -31,6 +33,8 @@ change a database.
     c. RUNNING
         i. Ensure that the cfg database is running on your machine.
        ii. Run the driver.py file in an IDE or through the command line.
+      iii. If any issues persist with running the program, edit the database name and passwords found in connection.py
+           and reports.py.
 
 3. USAGE
     This project was to test our understanding or database management and application design conecpts.
@@ -53,5 +57,6 @@ change a database.
         a. "Generate Representative Report" section of the final report
         b. "Generate Representative Report" function implementation and documentation
     v. Dane West:
-        a. "Generate Customer Report" section of the final report
-        b. "Generate Customer Report" function implementation and documentation
+        a. GitHub repository
+        b. "Generate Customer Report" section of the final report
+        c. "Generate Customer Report" function implementation and documentation
