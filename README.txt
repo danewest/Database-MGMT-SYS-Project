@@ -14,8 +14,7 @@ TABLE OF CONTENTS:
         b. Installation
         c. Running
     3. Usage
-    4. Roadmap
-    5. Contributing
+    4. Contributions
 
 1. ABOUT THIS PROJECT
     This project was created as a final project for our (the contributors') Database Management Systems I class at
@@ -28,4 +27,31 @@ change a database.
        ii. MySql Connector Python 9.3+
       iii. MySQL Community Edition (Server, Workbench)
     b. INSTALLATION
-        i. Open the source project with your preferred Python IDE, or run on the console using the following command:
+        i. Download the project files to a directory that you can easily find.
+    c. RUNNING
+        i. Ensure that the cfg database is running on your machine.
+       ii. Run the driver.py file in an IDE or through the command line.
+
+3. USAGE
+    This project was to test our understanding or database management and application design conecpts.
+
+4. CONTRIBUTIONS
+    i. Isaac Dowell:
+        a. GUI design and implementation and documentation
+        b. README.txt file
+        c. "Description of Design" and "Update Customer Credit Limit" sections of the final report
+        d. "Update Customer Credit Limit" function implementation and documentation
+   ii. Emily Kedenburg:
+        a. Final report template
+        b. "Add Representative" section of the final report
+        c. "Add Representative" function implementation and documentation
+  iii. Alex Lozano:
+        a. Database Design and ER Diagram
+        b. Database server initialization
+        c. "Exit System" function implementation and documentation
+   iv. Coby West:
+        a. "Generate Representative Report" section of the final report
+        b. "Generate Representative Report" function implementation and documentation
+    v. Dane West:
+        a. "Generate Customer Report" section of the final report
+        b. "Generate Customer Report" function implementation and documentation
